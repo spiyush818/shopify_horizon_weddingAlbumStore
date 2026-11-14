@@ -1,0 +1,99 @@
+<section
+  class="wedding-story"
+  id="our-story"
+  style="--wedding-story-bg: {{ section.settings.background_color }}; --wedding-story-text: {{ section.settings.text_color }};"
+>
+  <div class="wedding-story__inner">
+    <div class="wedding-story__visual" style="--wedding-story-image-position: {{ section.settings.image_position }};">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 1600
+          | image_tag:
+            widths: '500, 750, 1000, 1300, 1600',
+            sizes: '(min-width: 990px) 48vw, 100vw',
+            alt: section.settings.image.alt,
+            class: 'wedding-story__image',
+            loading: 'lazy'
+        }}
+      {% else %}
+        <div class="wedding-story__placeholder" role="img" aria-label="Add a photograph in the theme editor">
+          <span class="wedding-story__placeholder-note">the things<br>we keep</span>
+        </div>
+      {% endif %}
+    </div>
+    <div class="wedding-story__content">
+      {% if section.settings.eyebrow != blank %}<p class="wedding-eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+      {% if section.settings.heading != blank %}<h2>{{ section.settings.heading | escape }}</h2>{% endif %}
+      {% if section.settings.description != blank %}<p class="wedding-story__description">{{ section.settings.description | escape }}</p>{% endif %}
+      <ul class="wedding-story__features">
+        {% for index in (1..3) %}
+          {% capture feature_key %}feature_{{ index }}{% endcapture %}
+          {% assign feature = section.settings[feature_key] %}
+          {% if feature != blank %}<li><span aria-hidden="true">✳</span>{{ feature | escape }}</li>{% endif %}
+        {% endfor %}
+      </ul>
+      {% if section.settings.button_label != blank %}
+        <a class="wedding-story__button" href="{{ section.settings.button_link | default: '#' }}">
+          {{ section.settings.button_label | escape }} <span aria-hidden="true">↗</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .wedding-story { padding: clamp(64px, 9vw, 124px) clamp(20px, 6vw, 88px); background: var(--wedding-story-bg); color: var(--wedding-story-text); }
+  .wedding-story__inner { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); align-items: center; gap: clamp(48px, 9vw, 140px); }
+  .wedding-story__visual { position: relative; min-height: 520px; }
+  .wedding-story__image, .wedding-story__placeholder { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--wedding-story-image-position, center center); }
+  .wedding-story__placeholder { display: grid; place-items: end start; padding: 30px; background: linear-gradient(145deg, #c3ad95, #ede1d2 55%, #9a8065); }
+  .wedding-story__placeholder-note { color: #fbf7f0; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(35px, 5vw, 62px); font-style: italic; line-height: .95; }
+  .wedding-story__content { max-width: 500px; }
+  .wedding-story__content .wedding-eyebrow { color: #80694f; margin-bottom: 18px; }
+  .wedding-story__content h2 { margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(38px, 4.7vw, 64px); font-weight: 400; letter-spacing: -.05em; line-height: 1.02; }
+  .wedding-story__description { margin: 22px 0 0; font-size: 13px; line-height: 1.9; opacity: .78; }
+  .wedding-story__features { display: grid; gap: 13px; margin: 27px 0 32px; padding: 0; list-style: none; }
+  .wedding-story__features li { display: flex; align-items: center; gap: 11px; font-size: 12px; }
+  .wedding-story__features li span { color: #80694f; font-size: 15px; }
+  .wedding-story__button { min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 22px; padding: 0 23px; border: 1px solid transparent; border-radius: 2px; background: #382f27; color: #fbf8f3; font-size: 12px; letter-spacing: .045em; text-decoration: none; transition: background .2s ease, color .2s ease, transform .2s ease; }
+  .wedding-story__button:hover { background: #68523d; color: #fff; transform: translateY(-2px); }
+  @media (max-width: 749px) {
+    .wedding-story { padding: 62px 20px; }
+    .wedding-story__inner { grid-template-columns: 1fr; gap: 40px; }
+    .wedding-story__visual { min-height: min(105vw, 450px); }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Wedding story",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "THE ART OF REMEMBERING" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Not just an album. A family heirloom." },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "The best stories deserve more than a place in your camera roll. We create considered, tactile albums that make it easy to slow down, turn a page, and feel it all again." },
+    { "type": "text", "id": "feature_one", "label": "Feature 1", "default": "Designed with care" },
+    { "type": "text", "id": "feature_two", "label": "Feature 2", "default": "Printed to last" },
+    { "type": "text", "id": "feature_three", "label": "Feature 3", "default": "Yours, from cover to cover" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Get to know us" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "image_picker", "id": "image", "label": "Photograph" },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image focal point",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center bottom", "label": "Bottom" },
+        { "value": "left center", "label": "Left" },
+        { "value": "right center", "label": "Right" }
+      ],
+      "default": "center center"
+    },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#e9ded0" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#382f27" }
+  ],
+  "presets": [{ "name": "Wedding story" }]
+}
+{% endschema %}

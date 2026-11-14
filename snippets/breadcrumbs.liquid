@@ -1,0 +1,33 @@
+{%- unless template.name == 'index' -%}
+  {% assign path_segments = request.path | split: '/' %}
+  {% assign current_path = '' %}
+
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumb-item">
+        <a href="{{ routes.root_url }}">Home</a>
+      </li>
+
+      {% for segment in path_segments %}
+        {% if segment != blank %}
+          {% assign current_path = current_path | append: '/' | append: segment %}
+
+          {% assign label = segment | replace: '-', ' ' | replace: '_', ' ' %}
+          {% assign label = label | capitalize %}
+
+          {% if forloop.last %}
+            <li class="breadcrumb-separator" aria-hidden="true">/</li>
+            <li class="breadcrumb-item breadcrumb-item--current" aria-current="page">
+              {{ label }}
+            </li>
+          {% else %}
+            <li class="breadcrumb-separator" aria-hidden="true">/</li>
+            <li class="breadcrumb-item">
+              <a href="{{ current_path }}">{{ label }}</a>
+            </li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </ol>
+  </nav>
+{%- endunless -%}

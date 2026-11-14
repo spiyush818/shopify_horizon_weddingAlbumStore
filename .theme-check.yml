@@ -1,0 +1,3 @@
+JSONMissingBlock:
+  ignore:
+    - templates/product.json

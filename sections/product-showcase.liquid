@@ -1,0 +1,301 @@
+{% liquid
+  assign product_source = section.settings.product_source | default: 'collection'
+
+  if product_source == 'products'
+    assign showcase_products = section.settings.products
+  elsif section.settings.collection != blank
+    assign showcase_products = section.settings.collection.products
+  endif
+
+%}
+
+<link rel="stylesheet" href="{{ 'product-showcase.css' | asset_url }}">
+<script src="{{ 'product-showcase.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+<section
+  id="ProductShowcase-{{ section.id }}"
+  class="section section--{{ section.settings.section_width }} spacing-style product-showcase"
+  style="
+    --padding-block-start: {{ section.settings.padding_top }}px;
+    --padding-block-end: {{ section.settings.padding_bottom }}px;
+    --product-showcase-gap: {{ section.settings.card_gap }}px;
+    --product-showcase-columns: {{ section.settings.columns }};
+    background-color: {{ section.settings.background_color }};
+  "
+  data-product-showcase
+  data-columns="{{ section.settings.columns }}"
+  data-mobile-columns="{{ section.settings.mobile_columns }}"
+  aria-label="{{ section.settings.heading | escape }}"
+>
+  <div class="product-showcase__content">
+    <div class="product-showcase__header">
+      {% if section.settings.heading != blank %}
+        <h2 class="product-showcase__heading">{{ section.settings.heading | escape }}</h2>
+      {% endif %}
+      <div class="product-showcase__controls">
+        <button
+          class="product-showcase__arrow"
+          type="button"
+          data-showcase-scroll="-1"
+          aria-label="Scroll products left"
+          aria-controls="ProductShowcaseTrack-{{ section.id }}"
+          disabled
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="m15 18-6-6 6-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+          </svg>
+        </button>
+        <button
+          class="product-showcase__arrow"
+          type="button"
+          data-showcase-scroll="1"
+          aria-label="Scroll products right"
+          aria-controls="ProductShowcaseTrack-{{ section.id }}"
+          disabled
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    {% if showcase_products != blank %}
+      <div
+        id="ProductShowcaseTrack-{{ section.id }}"
+        class="product-showcase__track"
+        data-showcase-track
+        role="list"
+      >
+        {% for product in showcase_products limit: section.settings.max_products %}
+          {% assign product_image = product.featured_media.preview_image | default: product.featured_image %}
+          <article class="product-showcase__item" role="listitem">
+            <div class="product-showcase__media">
+              <a
+                class="product-showcase__image-link"
+                href="{{ product.url }}"
+                aria-label="{{ product.title | escape }}"
+              >
+                {% if product_image != blank %}
+                  {{
+                    product_image
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '240, 360, 540, 720, 900',
+                      sizes: '(min-width: 1400px) 18vw, (min-width: 750px) 24vw, 70vw',
+                      alt: product_image.alt
+                  }}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'product-showcase__placeholder' }}
+                {% endif %}
+              </a>
+              <button
+                class="product-showcase__wishlist"
+                type="button"
+                data-wishlist-product="{{ product.id }}"
+                data-product-title="{{ product.title | escape }}"
+                aria-label="Add {{ product.title | escape }} to wishlist"
+                aria-pressed="false"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M20.8 8.6c0 4.1-8.8 10.1-8.8 10.1S3.2 12.7 3.2 8.6a4.6 4.6 0 0 1 8.8-1.8 4.6 4.6 0 0 1 8.8 1.8Z"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="product-showcase__details">
+              <a class="product-showcase__title" href="{{ product.url }}">
+                {{ product.title | escape }}
+              </a>
+              <div class="product-showcase__price">
+                {% render 'price', product_resource: product, show_sale_price_first: true %}
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% elsif request.design_mode %}
+      {% comment %}
+        Temporary preview products for the theme editor. Remove this preview block when replacing it is no longer needed.
+      {% endcomment %}
+      {% assign sample_titles = 'Standard Visiting Cards|Rounded Corner Visiting Cards|Letterheads|Photo Albums|Stickers|Hoodies' | split: '|' %}
+      {% assign sample_prices = '20000|25000|23000|71500|15000|108000' | split: '|' %}
+      <div
+        id="ProductShowcaseTrack-{{ section.id }}"
+        class="product-showcase__track"
+        data-showcase-track
+        role="list"
+      >
+        {% for sample_title in sample_titles limit: section.settings.max_products %}
+          {% assign sample_placeholder = 'product-' | append: forloop.index %}
+          {% assign sample_price = sample_prices[forloop.index0] | plus: 0 %}
+          <article class="product-showcase__item" role="listitem">
+            <div class="product-showcase__media">
+              <div class="product-showcase__image-link" aria-hidden="true">
+                {{ sample_placeholder | placeholder_svg_tag: 'product-showcase__placeholder' }}
+              </div>
+              <button
+                class="product-showcase__wishlist"
+                type="button"
+                data-wishlist-product="showcase-demo-{{ forloop.index }}"
+                data-product-title="{{ sample_title | escape }}"
+                aria-label="Add {{ sample_title | escape }} to wishlist"
+                aria-pressed="false"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M20.8 8.6c0 4.1-8.8 10.1-8.8 10.1S3.2 12.7 3.2 8.6a4.6 4.6 0 0 1 8.8-1.8 4.6 4.6 0 0 1 8.8 1.8Z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="product-showcase__details">
+              <span class="product-showcase__title">{{ sample_title }}</span>
+              <div class="product-showcase__price">{{ sample_price | money }}</div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+      <p class="product-showcase__preview-note">
+        Preview samples only. Select a collection or products in this section's settings to show your products.
+      </p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product showcase",
+  "tag": "section",
+  "class": "product-showcase-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Most Popular Products"
+    },
+    {
+      "type": "select",
+      "id": "product_source",
+      "label": "Product source",
+      "options": [
+        {
+          "value": "collection",
+          "label": "Collection"
+        },
+        {
+          "value": "products",
+          "label": "Hand-picked products"
+        }
+      ],
+      "default": "collection",
+      "info": "Choose the collection or hand-picked products setting below to match this selection."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Hand-picked products",
+      "limit": 16
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Maximum products",
+      "min": 2,
+      "max": 16,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Products visible on desktop",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Products visible on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Space between products",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page"
+        },
+        {
+          "value": "full-width",
+          "label": "Full width"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product showcase"
+    }
+  ]
+}
+{% endschema %}

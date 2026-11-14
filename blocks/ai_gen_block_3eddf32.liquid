@@ -1,0 +1,63 @@
+{% doc %}
+  @prompt
+    generate breadcrumb here not in home page and not in cart rest place show it 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% style %}
+  .ai-breadcrumb-{{ ai_gen_id }} { display: block; width: {{ block.settings.desktop_width_percent }}%; max-width: 100%; padding: 12px 0; color: {{ block.settings.text_color }}; font-family: inherit; font-size: 14px; line-height: 1.5; }
+  .ai-breadcrumb-{{ ai_gen_id }} ol { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  .ai-breadcrumb-{{ ai_gen_id }} li { display: inline-flex; align-items: center; gap: 8px; }
+  .ai-breadcrumb-{{ ai_gen_id }} a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+  .ai-breadcrumb-{{ ai_gen_id }} a:hover { text-decoration-thickness: 2px; }
+  .ai-breadcrumb-{{ ai_gen_id }} a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+  .ai-breadcrumb-{{ ai_gen_id }}__separator { color: {{ block.settings.separator_color }}; user-select: none; }
+  @media screen and (max-width: 749px) { .ai-breadcrumb-{{ ai_gen_id }} { width: 100%; font-size: 13px; } }
+{% endstyle %}
+{% unless request.page_type == 'index' or request.page_type == 'cart' %}
+  <nav class="ai-breadcrumb-{{ ai_gen_id }}" aria-label="Breadcrumb" {{ block.shopify_attributes }}>
+    <ol>
+      <li><a href="{{ routes.root_url }}">{{ block.settings.home_label | escape }}</a><span class="ai-breadcrumb-{{ ai_gen_id }}__separator" aria-hidden="true">{{ block.settings.separator | escape }}</span></li>
+      {% if request.page_type == 'product' %}
+        {% if collection %}
+          <li><a href="{{ collection.url }}">{{ collection.title | escape }}</a><span class="ai-breadcrumb-{{ ai_gen_id }}__separator" aria-hidden="true">{{ block.settings.separator | escape }}</span></li>
+        {% elsif product.collections.first %}
+          {% assign breadcrumb_collection = product.collections.first %}
+          <li><a href="{{ breadcrumb_collection.url }}">{{ breadcrumb_collection.title | escape }}</a><span class="ai-breadcrumb-{{ ai_gen_id }}__separator" aria-hidden="true">{{ block.settings.separator | escape }}</span></li>
+        {% endif %}
+        <li aria-current="page">{{ product.title | escape }}</li>
+      {% elsif request.page_type == 'collection' %}
+        <li aria-current="page">{{ collection.title | escape }}</li>
+      {% elsif request.page_type == 'page' %}
+        <li aria-current="page">{{ page.title | escape }}</li>
+      {% elsif request.page_type == 'blog' %}
+        <li aria-current="page">{{ blog.title | escape }}</li>
+      {% elsif request.page_type == 'article' %}
+        <li><a href="{{ blog.url }}">{{ blog.title | escape }}</a><span class="ai-breadcrumb-{{ ai_gen_id }}__separator" aria-hidden="true">{{ block.settings.separator | escape }}</span></li>
+        <li aria-current="page">{{ article.title | escape }}</li>
+      {% elsif request.page_type == 'search' %}
+        <li aria-current="page">{{ block.settings.search_label | escape }}</li>
+      {% elsif request.page_type == '404' %}
+        <li aria-current="page">{{ block.settings.not_found_label | escape }}</li>
+      {% else %}
+        <li aria-current="page">{{ page_title | escape }}</li>
+      {% endif %}
+    </ol>
+  </nav>
+{% endunless %}
+{% schema %}
+{
+  "name": "Breadcrumb",
+  "settings": [
+    { "type": "range", "id": "desktop_width_percent", "label": "Desktop width", "min": 50, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "text", "id": "home_label", "label": "Home label", "default": "Home" },
+    { "type": "text", "id": "search_label", "label": "Search label", "default": "Search results" },
+    { "type": "text", "id": "not_found_label", "label": "Not found label", "default": "Page not found" },
+    { "type": "text", "id": "separator", "label": "Separator", "default": "/" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#333333" },
+    { "type": "color", "id": "separator_color", "label": "Separator color", "default": "#595959" }
+  ],
+  "presets": [{ "name": "Breadcrumb" }],
+  "tag": null,
+  "class": "breadcrumb-block"
+}
+{% endschema %}

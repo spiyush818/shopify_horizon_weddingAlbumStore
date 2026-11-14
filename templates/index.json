@@ -1,0 +1,127 @@
+{
+  "sections": {
+    "wedding_hero": {
+      "type": "wedding-hero",
+      "settings": {
+        "eyebrow": "MADE FOR YOUR FOREVER",
+        "heading": "Keep your forever close.",
+        "description": "Turn the little moments and once-in-a-lifetime days into a beautifully made album you'll return to for years.",
+        "primary_label": "Explore the albums",
+        "primary_link": "#album-collections",
+        "secondary_label": "Our story",
+        "secondary_link": "#our-story",
+        "note": "Thoughtfully made, made to be kept",
+        "image_position": "center center",
+        "background_color": "#f5efe6",
+        "text_color": "#382f27"
+      }
+    },
+    "album_collections": {
+      "type": "album-collections",
+      "blocks": {
+        "wedding_album": {
+          "type": "album",
+          "settings": {
+            "eyebrow": "THE WEDDING ALBUM",
+            "heading": "Your day, beautifully told",
+            "description": "The vows, the happy tears, the dance floor. Gather every detail in one timeless place.",
+            "link_label": "Discover the wedding album",
+            "link": "#"
+          }
+        },
+        "engagement_album": {
+          "type": "album",
+          "settings": {
+            "eyebrow": "THE ENGAGEMENT ALBUM",
+            "heading": "The beginning of always",
+            "description": "Celebrate the story that brought you here, from the first yes to the next chapter.",
+            "link_label": "Explore engagement albums",
+            "link": "#"
+          }
+        },
+        "keepsake_album": {
+          "type": "album",
+          "settings": {
+            "eyebrow": "THE KEEPSAKE",
+            "heading": "Little moments, lasting memories",
+            "description": "A thoughtful home for anniversaries, family celebrations, and all the in-between.",
+            "link_label": "Find your keepsake",
+            "link": "#"
+          }
+        }
+      },
+      "block_order": [
+        "wedding_album",
+        "engagement_album",
+        "keepsake_album"
+      ],
+      "settings": {
+        "eyebrow": "A PLACE FOR EVERY CHAPTER",
+        "heading": "Made to hold your most meaningful moments",
+        "description": "Choose a story to begin.",
+        "background_color": "#fbf8f3"
+      }
+    },
+    "wedding_story": {
+      "type": "wedding-story",
+      "settings": {
+        "eyebrow": "THE ART OF REMEMBERING",
+        "heading": "Not just an album. A family heirloom.",
+        "description": "The best stories deserve more than a place in your camera roll. We create considered, tactile albums that make it easy to slow down, turn a page, and feel it all again.",
+        "feature_one": "Designed with care",
+        "feature_two": "Printed to last",
+        "feature_three": "Yours, from cover to cover",
+        "button_label": "Get to know us",
+        "button_link": "#",
+        "image_position": "center center",
+        "background_color": "#e9ded0",
+        "text_color": "#382f27"
+      }
+    },
+    "wedding_details": {
+      "type": "wedding-details",
+      "blocks": {
+        "detail_one": {
+          "type": "detail",
+          "settings": {
+            "mark": "01",
+            "heading": "A story-first design",
+            "description": "A thoughtful layout that gives the moments, people, and little details room to shine."
+          }
+        },
+        "detail_two": {
+          "type": "detail",
+          "settings": {
+            "mark": "02",
+            "heading": "Made to feel",
+            "description": "Beautiful materials and considered finishing turn every page into part of the memory."
+          }
+        },
+        "detail_three": {
+          "type": "detail",
+          "settings": {
+            "mark": "03",
+            "heading": "Yours, all the way",
+            "description": "Choose the photographs, words, and details that make your album unmistakably yours."
+          }
+        }
+      },
+      "block_order": [
+        "detail_one",
+        "detail_two",
+        "detail_three"
+      ],
+      "settings": {
+        "eyebrow": "THE DETAILS MATTER",
+        "heading": "Made for a lifetime of looking back",
+        "background_color": "#fbf8f3"
+      }
+    }
+  },
+  "order": [
+    "wedding_hero",
+    "album_collections",
+    "wedding_story",
+    "wedding_details"
+  ]
+}

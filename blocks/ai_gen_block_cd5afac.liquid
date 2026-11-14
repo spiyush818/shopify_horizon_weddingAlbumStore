@@ -1,0 +1,133 @@
+{% doc %}
+  @prompt
+    create one section  with bacground image  color navy blue and with Visiting Cards
+    Design and print professional visiting cards with high-definition printing capturing rich colors on premium quality paper.
+    Browse templates
+    Upload design
+    Reorder, decsription and last is three buttons on click of it page will open i will add pages later 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-card-hero-{{ ai_gen_id }} {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    min-height: {{ block.settings.hero_height }}px;
+    background-color: {{ block.settings.background_color }};
+    color: #ffffff;
+    border-radius: {{ block.settings.corner_radius }}px;
+  }
+  .ai-card-hero-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: {% if block.settings.background_image != blank %}linear-gradient(90deg, rgba(4, 20, 52, 0.94) 0%, rgba(4, 20, 52, 0.78) 54%, rgba(4, 20, 52, 0.3) 100%), url('{{ block.settings.background_image | image_url: width: 2000 }}'){% else %}linear-gradient(115deg, #071b46, #12376b){% endif %};
+    background-size: cover;
+    background-position: center;
+  }
+  .ai-card-hero-{{ ai_gen_id }}__inner {
+    position: relative;
+    z-index: 1;
+    min-height: inherit;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: clamp(32px, 7vw, 88px);
+    max-width: 850px;
+  }
+  .ai-card-hero-{{ ai_gen_id }}__eyebrow {
+    margin: 0 0 14px;
+    color: #d7e5ff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .ai-card-hero-{{ ai_gen_id }}__title {
+    color: #ffffff;
+    font-size: clamp(38px, 6vw, {{ block.settings.heading_size }}px);
+    line-height: 1.08;
+    margin: 0 0 20px;
+    font-weight: 700;
+  }
+  .ai-card-hero-{{ ai_gen_id }}__description {
+    color: #f0f5ff;
+    font-size: clamp(16px, 1.8vw, 19px);
+    line-height: 1.65;
+    max-width: 650px;
+    margin-bottom: 30px;
+  }
+  .ai-card-hero-{{ ai_gen_id }}__description p { margin: 0; }
+  .ai-card-hero-{{ ai_gen_id }}__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .ai-card-hero-{{ ai_gen_id }}__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: 12px 22px;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    background: #ffffff;
+    color: #071b46;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color .2s ease, color .2s ease;
+  }
+  .ai-card-hero-{{ ai_gen_id }}__button:hover { background: transparent; color: #ffffff; }
+  .ai-card-hero-{{ ai_gen_id }}__button:focus-visible { outline: 3px solid #ffd166; outline-offset: 3px; }
+  @media screen and (max-width: 600px) {
+    .ai-card-hero-{{ ai_gen_id }} { min-height: 440px; }
+    .ai-card-hero-{{ ai_gen_id }}__inner { padding: 32px 24px; }
+    .ai-card-hero-{{ ai_gen_id }}__actions { width: 100%; flex-direction: column; }
+    .ai-card-hero-{{ ai_gen_id }}__button { width: 100%; }
+  }
+{% endstyle %}
+
+<section class="ai-card-hero-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-card-hero-{{ ai_gen_id }}__inner">
+    {% if block.settings.eyebrow != blank %}<p class="ai-card-hero-{{ ai_gen_id }}__eyebrow">{{ block.settings.eyebrow | escape }}</p>{% endif %}
+    <h1 class="ai-card-hero-{{ ai_gen_id }}__title">{{ block.settings.heading | escape }}</h1>
+    {% if block.settings.description != blank %}<div class="ai-card-hero-{{ ai_gen_id }}__description">{{ block.settings.description }}</div>{% endif %}
+    <div class="ai-card-hero-{{ ai_gen_id }}__actions">
+      {% if block.settings.button_one_label != blank %}<a class="ai-card-hero-{{ ai_gen_id }}__button" href="{{ block.settings.button_one_link | default: '#' }}">{{ block.settings.button_one_label | escape }}</a>{% endif %}
+      {% if block.settings.button_two_label != blank %}<a class="ai-card-hero-{{ ai_gen_id }}__button" href="{{ block.settings.button_two_link | default: '#' }}">{{ block.settings.button_two_label | escape }}</a>{% endif %}
+      {% if block.settings.button_three_label != blank %}<a class="ai-card-hero-{{ ai_gen_id }}__button" href="{{ block.settings.button_three_link | default: '#' }}">{{ block.settings.button_three_label | escape }}</a>{% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Visiting cards hero",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Premium printing" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Visiting Cards" },
+    { "type": "richtext", "id": "description", "label": "Description", "default": "<p>Design and print professional visiting cards with high-definition printing capturing rich colors on premium quality paper.</p>" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_one_label", "label": "Button one label", "default": "Browse templates" },
+    { "type": "url", "id": "button_one_link", "label": "Button one link" },
+    { "type": "text", "id": "button_two_label", "label": "Button two label", "default": "Upload design" },
+    { "type": "url", "id": "button_two_link", "label": "Button two link" },
+    { "type": "text", "id": "button_three_label", "label": "Button three label", "default": "Reorder" },
+    { "type": "url", "id": "button_three_link", "label": "Button three link" },
+    { "type": "header", "content": "Background and layout" },
+    { "type": "image_picker", "id": "background_image", "label": "Background image" },
+    { "type": "color", "id": "background_color", "label": "Fallback background", "default": "#071B46" },
+    { "type": "range", "id": "desktop_width_percent", "label": "Desktop width", "min": 50, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "hero_height", "label": "Hero height", "min": 350, "max": 750, "step": 25, "unit": "px", "default": 550 },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 40, "max": 80, "step": 5, "unit": "px", "default": 60 },
+    { "type": "range", "id": "corner_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Visiting cards hero" }],
+  "tag": null,
+  "class": "visiting-cards-hero"
+}
+{% endschema %}
