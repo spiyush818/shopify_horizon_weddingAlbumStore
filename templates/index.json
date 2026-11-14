@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "wedding_hero": {
@@ -19,6 +28,16 @@
     "album_collections": {
       "type": "album-collections",
       "blocks": {
+        "album_9x93Aw": {
+          "type": "album",
+          "settings": {
+            "eyebrow": "THE WEDDING ALBUM",
+            "heading": "Your day, beautifully told",
+            "description": "Gather every detail of your celebration in one timeless place.",
+            "link_label": "Discover the album",
+            "link": ""
+          }
+        },
         "wedding_album": {
           "type": "album",
           "settings": {
@@ -51,6 +70,7 @@
         }
       },
       "block_order": [
+        "album_9x93Aw",
         "wedding_album",
         "engagement_album",
         "keepsake_album"
@@ -73,6 +93,7 @@
         "feature_three": "Yours, from cover to cover",
         "button_label": "Get to know us",
         "button_link": "#",
+        "image": "shopify://shop_images/wedding-album-photo.png",
         "image_position": "center center",
         "background_color": "#e9ded0",
         "text_color": "#382f27"
